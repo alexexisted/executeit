@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 ./.idea
 .idea
+src/main/kotlin/.env
 ### STS ###
 .apt_generated
 .classpath

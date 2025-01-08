@@ -38,6 +38,7 @@ dependencies {
     implementation("com.h2database:h2:$h2_version")
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("io.ktor:ktor-server-cio-jvm")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml-jvm")
     testImplementation("io.ktor:ktor-server-test-host-jvm")

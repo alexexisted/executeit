@@ -1,5 +1,6 @@
 package alexa.execute
 
+import io.github.cdimascio.dotenv.Dotenv
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -8,8 +9,8 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     configureSecurity()
-    configureSerialization()
     configureHTTP()
-    configureDatabases()
     configureRouting()
+//    configureDatabases()
+//    configureSerialization()
 }
