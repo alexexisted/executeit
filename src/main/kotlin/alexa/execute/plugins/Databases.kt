@@ -1,7 +1,7 @@
-package alexa.execute
+package alexa.execute.plugins
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
+import alexa.execute.infrastructure.database.ExposedUser
+import alexa.execute.infrastructure.database.UserService
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -16,7 +16,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 
 fun Application.configureDatabases() {

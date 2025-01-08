@@ -1,4 +1,4 @@
-package alexa.execute
+package alexa.execute.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm

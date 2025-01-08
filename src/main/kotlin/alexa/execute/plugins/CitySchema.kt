@@ -1,4 +1,4 @@
-package alexa.execute
+package alexa.execute.plugins
 
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
