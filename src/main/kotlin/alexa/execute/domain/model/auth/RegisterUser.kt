@@ -1,6 +1,6 @@
 package alexa.execute.domain.model.auth
 
-import alexa.execute.domain.model.user.User
+import alexa.execute.domain.model.user.RespondUserModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,8 +13,8 @@ data class RegisterUser(
 
 val registerUsers = mutableListOf<RegisterUser>()
 
-fun RegisterUser.toUser() : User {
-    return User(
+fun RegisterUser.toUser() : RespondUserModel {
+    return RespondUserModel(
         email = this.email,
         nickname = this.nickname,
         password = this.password

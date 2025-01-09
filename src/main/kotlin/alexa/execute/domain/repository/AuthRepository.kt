@@ -4,7 +4,7 @@ import alexa.execute.domain.model.auth.LoginUser
 import alexa.execute.domain.model.auth.RegisterUser
 import alexa.execute.domain.model.auth.registerUsers
 import alexa.execute.domain.model.auth.toUser
-import alexa.execute.domain.model.user.User
+import alexa.execute.domain.model.user.RespondUserModel
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.github.cdimascio.dotenv.Dotenv
@@ -16,12 +16,12 @@ class AuthRepository {
         return registerUsers.any { it.email == user.email }
     }
 
-    fun loggingUser(loginUser: LoginUser): User? {
+    fun loggingUser(loginUser: LoginUser): RespondUserModel? {
         val user = registerUsers.find { it.email == loginUser.email && it.password == loginUser.password }
         return user?.toUser()
     }
 
-    fun createJWT(user: User): String {
+    fun createJWT(user: RespondUserModel): String {
         val token = JWT.create()
             .withAudience(dotenv["AUD"] ?: throw IllegalStateException("AUD not set"))
             .withIssuer(dotenv["ISS"] ?: throw IllegalStateException("ISS not set"))

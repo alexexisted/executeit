@@ -16,8 +16,6 @@ import kotlin.collections.set
 fun Application.configureSecurity() {
 
     val dotenv = Dotenv.load()
-    println(System.getenv().entries.joinToString("\n") { "${it.key}=${it.value}" })
-
 
     val jwtAudience = dotenv["AUD"]
         ?: throw IllegalStateException("AUD not set in .env")
