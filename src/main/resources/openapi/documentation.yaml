@@ -19,5 +19,105 @@ paths:
               examples:
                 Example#1:
                   value: "Hello World!"
+
+  /register:
+    post:
+      requestBody:
+        description: User registration details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: your.email@test.com
+                  description: The user's email address.
+                nickname:
+                  type: string
+                  example: nagibator228
+                  description: The user's nickname.
+                age:
+                  type: integer
+                  example: 95
+                  description: The user's age.
+                password:
+                  type: string
+                  format: password
+                  example: secret12345(bad example)
+                  description: The user's password.
+              required:
+                - email
+                - nickname
+                - age
+                - password
+      description: "Route to register new user"
+      responses:
+        "201":
+          description: "CREATED"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User TEST! was created"
+        "409":
+          description: "CONFLICT"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "USER ALREADY EXISTS"
+
+  /login:
+    post:
+      requestBody:
+        description: Login route
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: your.email@test.com
+                  description: The user's email address.
+                password:
+                  type: string
+                  format: string
+                  example: supersecret12345
+                  description: your password
+              required:
+              - email
+              - nickname
+              - age
+              - password
+      description: "Route to login"
+      responses:
+        "200":
+          description: "SUCCESS"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "You logged in!"
+        "401":
+          description: "UNAUTHORIZED"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Wrong login or password!"
 components:
   schemas: { }
