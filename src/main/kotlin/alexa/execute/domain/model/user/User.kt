@@ -9,6 +9,5 @@ data class User(
     val email: String,
     val nickname: String,
     val password: String,
-    val age: Int,
-    val goals: List<Goal>
+    val age: Int
 )

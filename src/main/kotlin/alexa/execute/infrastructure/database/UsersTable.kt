@@ -8,8 +8,8 @@ object UsersTable : Table("users") {
     val nickname = varchar("nickname", 50)
     val password = varchar("password", 255)
     val age = integer("age")
-    val goals = jsonb("goals", String::class)
 
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }
+
 

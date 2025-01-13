@@ -2,21 +2,29 @@ package alexa.execute.infrastructure.database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.github.cdimascio.dotenv.Dotenv
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
-        val dotenv = Dotenv.load()
-        val config = HikariConfig().apply {
-            jdbcUrl = dotenv["JDBC_URL"]
-            driverClassName = dotenv["DRIVER"]
-            username = dotenv["POSTGRES_USER"]
-            password = dotenv["POSTGRES_PASSWORD"]
-            maximumPoolSize = 10
-//            maximumPoolSize = dotenv["MAX_POOL_SIZE"].toInt()
+        Database.connect(hikari())
+        transaction {
+            SchemaUtils.create(UsersTable) //create table
+            UsersTable.insert { //insert fake info into table
+                it[id] = 1
+                it[email] = "alexa@admin.com"
+                it[nickname] = "alexa_diamant"
+                it[password] = "alexas777secret"
+                it[age] = 20
+            }
+            SchemaUtils.create(GoalsTable) // create another table
         }
-        val dataSource = HikariDataSource(config)
-        Database.connect(dataSource)
+    }
+
+    private fun hikari(): HikariDataSource {
+        val config = HikariConfig("/hikari.properties")
+        return HikariDataSource(config)
     }
 }

@@ -1,5 +1,6 @@
 package alexa.execute
 
+import alexa.execute.infrastructure.database.DatabaseFactory
 import alexa.execute.plugins.configureHTTP
 import alexa.execute.plugins.configureSecurity
 import alexa.execute.plugins.configureSerialization
@@ -15,5 +16,6 @@ fun Application.module() {
     configureSerialization()
     configureHTTP()
     configureRouting()
+    DatabaseFactory.init()
 //    configureDatabases()
 }
