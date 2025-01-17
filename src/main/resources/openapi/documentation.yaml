@@ -119,5 +119,30 @@ paths:
               examples:
                 Example#1:
                   value: "Wrong login or password!"
+
+
+  /user/all:
+    get:
+      description: "Get all users from db"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "401":
+          description: "UNAUTHORIZED"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Access denied!"
+
 components:
   schemas: { }

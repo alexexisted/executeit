@@ -1,6 +1,7 @@
 package alexa.execute.infrastructure.routes
 
 import alexa.execute.domain.repository.AuthRepository
+import alexa.execute.domain.repository.UserRepository
 import alexa.execute.infrastructure.routes.authRoutes.authRouting
 import alexa.execute.infrastructure.routes.goalRoutes.goalRouting
 import alexa.execute.infrastructure.routes.userRoutes.userRouting
@@ -11,6 +12,6 @@ fun Application.configureRouting() {
     routing {
         authRouting(AuthRepository())
         goalRouting()
-        userRouting()
+        userRouting(UserRepository())
     }
 }

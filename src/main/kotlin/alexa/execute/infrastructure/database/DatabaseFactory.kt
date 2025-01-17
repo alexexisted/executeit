@@ -12,13 +12,6 @@ object DatabaseFactory {
         Database.connect(hikari())
         transaction {
             SchemaUtils.create(UsersTable) //create table
-            UsersTable.insert { //insert fake info into table
-                it[id] = 1
-                it[email] = "alexa@admin.com"
-                it[nickname] = "alexa_diamant"
-                it[password] = "alexas777secret"
-                it[age] = 20
-            }
             SchemaUtils.create(GoalsTable) // create another table
         }
     }
