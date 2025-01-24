@@ -1,7 +1,10 @@
 package alexa.execute.infrastructure.routes.userRoutes
 
+import alexa.execute.domain.model.user.User
 import alexa.execute.domain.repository.UserRepository
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.reflect.*
@@ -16,6 +19,7 @@ fun Application.userRouting(userRepository: UserRepository) {
                 call.respondText(
                     userRepository.getAllUsers().toString()
                 )
+
             }
 
             get("/{id}"){

@@ -23,7 +23,7 @@ paths:
   /register:
     post:
       requestBody:
-        description: User registration details
+        description: User registration
         required: true
         content:
           application/json:
@@ -96,8 +96,6 @@ paths:
                   description: your password
               required:
               - email
-              - nickname
-              - age
               - password
       description: "Route to login"
       responses:
@@ -128,7 +126,7 @@ paths:
         "200":
           description: "OK"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: "string"
               examples:
@@ -137,7 +135,7 @@ paths:
         "401":
           description: "UNAUTHORIZED"
           content:
-            text/plain:
+            application/json:
               schema:
                 type: "string"
               examples:

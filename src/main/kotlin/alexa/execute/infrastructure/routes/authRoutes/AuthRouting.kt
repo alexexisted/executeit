@@ -2,7 +2,9 @@ package alexa.execute.infrastructure.routes.authRoutes
 import alexa.execute.domain.model.auth.LoginUser
 import alexa.execute.domain.model.auth.RegisterUser
 import alexa.execute.domain.model.auth.registerUsers
+import alexa.execute.domain.model.user.User
 import alexa.execute.domain.repository.AuthRepository
+import alexa.execute.infrastructure.services.UserService
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import io.github.cdimascio.dotenv.Dotenv
@@ -12,40 +14,33 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.authRouting(authRepository: AuthRepository) {
+fun Application.authRouting(usersService: UserService) {
     val dotenv = Dotenv.load()
     routing {
         get("/") {
             call.respondText("Hello World!")
         }
         post("/register") {
-            val registerUser = call.receive<RegisterUser>()
-
-            //is already exists
-            if (authRepository.checkIfUserExists(registerUser)) {
+            val userToCreate = call.receive<User>()
+            if(usersService.checkIfUserExists(userToCreate)) {
+                usersService.create(userToCreate)
+                call.respond(HttpStatusCode.Created, "user ${userToCreate.nickname} created!")
+                return@post
+            } else {
                 call.respond(HttpStatusCode.Conflict, "User already exists!")
                 return@post
             }
-
-            registerUsers.add(registerUser)
-            call.respond(HttpStatusCode.Created, "User ${registerUser.nickname} was created!")
         }
         post("/login") {
             val credentials = call.receive<LoginUser>()
-            val user = authRepository.loggingUser(credentials)
+            val user = usersService.loggingUser(credentials)
 
             if (user == null) {
                 call.respond(HttpStatusCode.Unauthorized, "Wrong login or password!")
                 return@post
             }
-            val token = authRepository.createJWT(user)
+            val token = usersService.createJWT(user)
             call.respond(mapOf("token" to token))
-
-        }
-        get("/users") {
-            val allUsers = registerUsers
-            call.respond("$allUsers No user found")
-
         }
     }
 }
