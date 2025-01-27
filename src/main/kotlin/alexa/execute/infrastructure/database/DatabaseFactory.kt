@@ -11,8 +11,7 @@ object DatabaseFactory {
     fun init() {
         val database = Database.connect(hikari())
         transaction {
-            SchemaUtils.create(UsersTable) //create table
-            SchemaUtils.create(GoalsTable) // create another table
+            SchemaUtils.create(UsersTable, GoalsTable) //create table
         }
     }
 
