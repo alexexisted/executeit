@@ -1,32 +1,31 @@
 package alexa.execute.infrastructure.routes.userRoutes
 
-import alexa.execute.domain.model.user.User
-import alexa.execute.domain.repository.UserRepository
-import io.ktor.http.*
+import alexa.execute.infrastructure.services.UserService
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.reflect.*
-import kotlinx.serialization.json.Json
-import org.h2.util.json.JSONArray
 
-fun Application.userRouting(userRepository: UserRepository) {
-    routing{
-        route("/user"){
+fun Application.userRouting(userService: UserService) {
+    routing {
+        route("/user") {
 
-            get("/all"){
-                call.respondText(
-                    userRepository.getAllUsers().toString()
-                )
+            get("/all") {
+                val users = userService.getAllUsers()
+                call.respond(users)
 
             }
 
-            get("/{id}"){
-
+            get("/{id}") {
+                val id = call.parameters["id"]
+                val user = id?.let { userService.getUser(it.toInt()) }
+                if (user != null) {
+                    call.respond(user)
+                } else {
+                    call.respond("something went wrong!")
+                }
             }
 
-            post("/create"){
+            post("/create") {
 
             }
 

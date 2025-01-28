@@ -13,6 +13,6 @@ fun Application.configureRouting() {
     routing {
         authRouting(UserService())
         goalRouting()
-        userRouting(UserRepository())
+        userRouting(UserService())
     }
 }

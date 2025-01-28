@@ -91,37 +91,63 @@ paths:
                   description: The user's email address.
                 password:
                   type: string
-                  format: string
-                  example: supersecret12345
-                  description: your password
+                  format: password
+                  example: secret12345
+                  description: User's password
               required:
-              - email
-              - password
+                - email
+                - password
       description: "Route to login"
       responses:
-        "200":
-          description: "SUCCESS"
+        200:
+          description: Successful login
           content:
-            text/plain:
+            application/json:
               schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "You logged in!"
-        "401":
-          description: "UNAUTHORIZED"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Wrong login or password!"
-
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: The JWT token.
+        401:
+          description: Unauthorized - Wrong credentials
+        406:
+          description: Not Acceptable - Format not supported
 
   /user/all:
     get:
       description: "Get all users from db"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "401":
+          description: "UNAUTHORIZED"
+          content:
+            application/json:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Access denied!"
+
+  /user/{id}:
+    get:
+      description: "Get particular user by id"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique ID of the user.
+          schema:
+            type: integer
+            example: 1
       responses:
         "200":
           description: "OK"

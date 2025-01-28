@@ -1,7 +1,6 @@
 package alexa.execute.infrastructure.services
 
 import alexa.execute.domain.model.auth.LoginUser
-import alexa.execute.domain.model.user.RespondUserModel
 import alexa.execute.domain.model.user.User
 import alexa.execute.domain.model.user.toUser
 import alexa.execute.infrastructure.database.UsersTable
@@ -29,7 +28,7 @@ class UserService() {
         }[UsersTable.id]
     }
 
-    suspend fun read(id: Int): User? {
+    suspend fun getUser(id: Int): User? {
         return dbQuery {
             UsersTable.selectAll()
                 .where { UsersTable.id eq id }
@@ -94,7 +93,15 @@ class UserService() {
         return token
     }
 
-    private suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+    suspend fun getAllUsers(): List<User> {
+        var users: List<User> = emptyList()
+        dbQuery {
+            users = UsersTable.selectAll().map { it.toUser() }
+        }
+        return users
+    }
+
+private suspend fun <T> dbQuery(block: suspend () -> T): T =
+    newSuspendedTransaction(Dispatchers.IO) { block() }
 }
 
