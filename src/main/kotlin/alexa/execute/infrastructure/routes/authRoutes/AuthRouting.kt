@@ -32,7 +32,18 @@ fun Application.authRouting(userService: UserService) {
                 call.respond(HttpStatusCode.Unauthorized, "Wrong login or password!")
                 return@post
             }
-            val token = userService.createJWT(user)
+            val token = userService.createJWT(user.email)
+
+            call.response.cookies.append(
+                Cookie(
+                    name = "token",
+                    value = token,
+                    httpOnly = true,
+                    secure = false,   // TODO(make true on production)
+                    maxAge = 60 * 10000 // 10 min exp
+                )
+            )
+
             call.respond(mapOf("token" to token))
         }
     }

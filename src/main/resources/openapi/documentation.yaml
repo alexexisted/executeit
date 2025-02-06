@@ -168,5 +168,28 @@ paths:
                 Example#1:
                   value: "Access denied!"
 
+  /user/profile:
+    get:
+      description: "Get current"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "401":
+          description: "UNAUTHORIZED"
+          content:
+            application/json:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Access denied!"
+
 components:
   schemas: { }
