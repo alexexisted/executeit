@@ -25,14 +25,14 @@ fun Application.userRouting(userService: UserService) {
 
                     val principal = call.principal<JWTPrincipal>()
                     if (principal == null) {
-                        call.respond(HttpStatusCode.Unauthorized, "Token is invalid!")
+                        call.respond(HttpStatusCode.Unauthorized, "Token is invalid!, please login again")
                         return@get
                     }
-                    println(principal)
+
                     val email = principal?.payload?.getClaim("email")?.asString()
 
                     if (email == null) {
-                        call.respond(HttpStatusCode.Unauthorized, "Token is invalid!")
+                        call.respond(HttpStatusCode.Unauthorized, "Token is invalid!, please login again")
                         return@get
                     }
 
@@ -44,10 +44,28 @@ fun Application.userRouting(userService: UserService) {
                     }
                 }
 
-                post("/create") {
+                delete("/delete") {
+                    val principal = call.principal<JWTPrincipal>()
+                    if (principal == null) {
+                        call.respond(HttpStatusCode.Unauthorized, "Token is invalid!, please login again")
+                        return@delete
+                    }
 
+                    val email = principal?.payload?.getClaim("email")?.asString()
+
+                    if (email == null) {
+                        call.respond(HttpStatusCode.Unauthorized, "Token is invalid!, please login again")
+                        return@delete
+                    }
+
+                    val success = userService.deleteUser(email)
+
+                    if (success) {
+                        call.respond("User $email successfully deleted")
+                    } else {
+                        call.respond("something went wrong! please, try again")
+                    }
                 }
-
             }
         }
     }

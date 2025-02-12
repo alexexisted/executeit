@@ -137,37 +137,6 @@ paths:
                 Example#1:
                   value: "Access denied!"
 
-  /user/{id}:
-    get:
-      description: "Get particular user by id"
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The unique ID of the user.
-          schema:
-            type: integer
-            example: 1
-      responses:
-        "200":
-          description: "OK"
-          content:
-            application/json:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
-        "401":
-          description: "UNAUTHORIZED"
-          content:
-            application/json:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Access denied!"
-
   /user/profile:
     get:
       description: "Get current"
@@ -190,6 +159,43 @@ paths:
               examples:
                 Example#1:
                   value: "Access denied!"
+
+  /user/delete:
+    delete:
+      summary: "Delete a user account"
+      description: "Deletes the authenticated user's account permanently."
+      responses:
+        200:
+          description: "User deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User deleted successfully!"
+        401:
+          description: "Unauthorized request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized request"
+        500:
+          description: "Failed to delete user"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Failed to delete user!"
+
 
 components:
   schemas: { }

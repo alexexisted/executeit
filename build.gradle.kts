@@ -37,6 +37,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("io.ktor:ktor-server-cio-jvm")
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")

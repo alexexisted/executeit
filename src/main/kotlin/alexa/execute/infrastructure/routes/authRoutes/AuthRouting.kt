@@ -16,7 +16,7 @@ fun Application.authRouting(userService: UserService) {
         post("/register") {
             val userToCreate = call.receive<User>()
             if(userService.checkIfUserExists(userToCreate)) {
-                userService.create(userToCreate)
+                userService.registerUser(userToCreate)
                 call.respond(HttpStatusCode.Created, "user ${userToCreate.nickname} created!")
                 return@post
             } else {

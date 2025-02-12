@@ -16,6 +16,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
+import org.mindrot.jbcrypt.BCrypt
 import java.util.*
 
 class UserService() {
@@ -64,6 +65,26 @@ class UserService() {
         return decodeJWT(token)?.getClaim("email")?.asString()
     }
 
+    // Hash a password before saving it
+    fun hashPassword(password: String): String {
+        return BCrypt.hashpw(password, BCrypt.gensalt(7))
+    }
+
+    // Verify password when logging in
+    fun verifyPassword(plainPassword: String, hashedPassword: String): Boolean {
+        return BCrypt.checkpw(plainPassword, hashedPassword)
+    }
+
+    suspend fun registerUser(user: User): Int = dbQuery {
+        val hashedPassword = hashPassword(user.password)
+        UsersTable.insert {
+            it[email] = user.email
+            it[nickname] = user.nickname
+            it[password] = hashedPassword
+            it[age] = user.age
+        }[UsersTable.id]
+    }
+
     suspend fun create(user: User): Int = dbQuery {
         UsersTable.insert {
             it[email] = user.email
@@ -108,6 +129,12 @@ class UserService() {
         }
     }
 
+    suspend fun deleteUser(email: String): Boolean {
+        return dbQuery {
+            UsersTable.deleteWhere { UsersTable.email.eq(email) } > 0
+        }
+    }
+
     suspend fun checkIfUserExists(user: User): Boolean {
         var users: List<User> = emptyList()
         dbQuery {
@@ -127,7 +154,7 @@ class UserService() {
                 .map { it.toUser() }
                 .singleOrNull()
         }
-        return if (user?.password == loginUser.password) {
+        return if (user != null && verifyPassword(loginUser.password, user!!.password)) {
             user
         } else {
             null
