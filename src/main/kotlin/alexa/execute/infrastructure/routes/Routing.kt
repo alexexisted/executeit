@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 fun Application.configureRouting(userService: UserService) {
     routing {
         authRouting(userService)
-        goalRouting()
+        goalRouting(userService)
         userRouting(userService)
     }
 }

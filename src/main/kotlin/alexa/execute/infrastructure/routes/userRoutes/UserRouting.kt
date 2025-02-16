@@ -29,7 +29,7 @@ fun Application.userRouting(userService: UserService) {
                         return@get
                     }
 
-                    val email = principal?.payload?.getClaim("email")?.asString()
+                    val email = principal.payload.getClaim("email")?.asString()
 
                     if (email == null) {
                         call.respond(HttpStatusCode.Unauthorized, "Token is invalid!, please login again")

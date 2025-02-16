@@ -112,6 +112,16 @@ class UserService() {
         }
     }
 
+    suspend fun getUserId(email: String): Int? {
+        val user = dbQuery {
+            UsersTable.selectAll()
+                .where {UsersTable.email eq email}
+                .map { it.toUser() }
+                .singleOrNull()
+        }
+        return user?.id
+    }
+
     suspend fun update(id: Int, user: User) {
         dbQuery {
             UsersTable.update({ UsersTable.id eq id }) {
