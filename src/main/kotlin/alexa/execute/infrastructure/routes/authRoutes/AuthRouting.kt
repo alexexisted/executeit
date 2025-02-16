@@ -46,5 +46,18 @@ fun Application.authRouting(userService: UserService) {
 
             call.respond(mapOf("token" to token))
         }
+        post("/logout") {
+            call.response.cookies.append(
+                Cookie(
+                    name = "token",
+                    value = "",
+                    path = "/",
+                    maxAge = 0,
+                    httpOnly = true,
+                    secure = false  // TODO(make true on production)
+                )
+            )
+            call.respond(HttpStatusCode.OK, mapOf("message" to "Logged out successfully!"))
+        }
     }
 }

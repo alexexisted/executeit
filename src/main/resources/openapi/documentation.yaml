@@ -114,6 +114,35 @@ paths:
         406:
           description: Not Acceptable - Format not supported
 
+  /logout:
+    post:
+      summary: "Log out the current user"
+      description: "Removes the authentication token from cookies"
+      security:
+        - jwt-auth: [ ]
+      responses:
+        200:
+          description: "User logged out successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logged out successfully!"
+        401:
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unauthorized request"
+
+
   /user/all:
     get:
       description: "Get all users from db"
