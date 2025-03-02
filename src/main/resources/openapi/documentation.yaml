@@ -226,5 +226,173 @@ paths:
                     example: "Failed to delete user!"
 
 
+  /goal/create:
+    post:
+      requestBody:
+        description: Goal creation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                goalName:
+                  type: string
+                  format: text
+                  example: read a book every day
+                  description: shortly name your goal
+                startDate:
+                  type: string
+                  example: 12.11.2004
+                  description: enter the date when you're planning to start
+                endDate:
+                  type: string
+                  example: 12.11.2005
+                  description: (optional)
+
+              required:
+                - goalName
+                - startDate
+                - endDate
+      description: "Route to create a new goal"
+      responses:
+        "201":
+          description: "CREATED"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Goal was created"
+        "409":
+          description: "CONFLICT"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Something went wrong"
+
+  /goal/all:
+    get:
+      description: "Get all goals set in the db"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+        "401":
+          description: "UNAUTHORIZED"
+          content:
+            application/json:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Access denied!"
+
+  /goal/{id}/delete:
+    delete:
+      summary: "Delete a goal"
+      description: "Deletes a goal by its ID."
+      security:
+        - jwt-auth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "The ID of the goal to delete."
+      responses:
+        200:
+          description: "Goal successfully deleted"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Goal has been deleted!"
+        400:
+          description: "Invalid goal ID"
+        401:
+          description: "Unauthorized request"
+        404:
+          description: "Goal not found"
+
+  /goal/user/{user_id}:
+    get:
+      summary: "Get user's goal"
+      description: "Get goal by user is."
+      security:
+        - jwt-auth: [ ]
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "The ID of the goal to delete."
+      responses:
+        200:
+          description: "List of goals"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "{Goal1}}"
+        400:
+          description: "Invalid user ID"
+        401:
+          description: "Unauthorized request"
+        404:
+          description: "User is not found"
+
+  /goal/{id}/add_date:
+    post:
+      summary: "Add a new completed date to a goal"
+      description: "Appends a new date to the `done_dates` field for a given goal."
+      security:
+        - jwt-auth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: "The ID of the goal."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              properties:
+                date:
+                  type: string
+                  example: "14.11.2025"
+                  description: "The date to be added."
+      responses:
+        200:
+          description: "Date added successfully."
+        400:
+          description: "Invalid goal ID."
+        401:
+          description: "Unauthorized request."
+
+
+
 components:
   schemas: { }

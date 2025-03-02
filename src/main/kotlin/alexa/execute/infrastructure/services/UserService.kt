@@ -1,13 +1,16 @@
 package alexa.execute.infrastructure.services
 
 import alexa.execute.domain.model.auth.LoginUser
+import alexa.execute.domain.model.goal.Goal
+import alexa.execute.domain.model.goal.toGoal
 import alexa.execute.domain.model.user.User
 import alexa.execute.domain.model.user.toUser
+import alexa.execute.infrastructure.database.GoalsTable
 import alexa.execute.infrastructure.database.UsersTable
 import com.auth0.jwt.JWT
-import com.auth0.jwt.interfaces.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
+import com.auth0.jwt.interfaces.JWTVerifier
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -85,13 +88,28 @@ class UserService() {
         }[UsersTable.id]
     }
 
-    suspend fun create(user: User): Int = dbQuery {
+    suspend fun createUser(user: User): Int = dbQuery {
         UsersTable.insert {
             it[email] = user.email
             it[nickname] = user.nickname
             it[password] = user.password
             it[age] = user.age
         }[UsersTable.id]
+    }
+
+    suspend fun createGoal(goal: Goal): Int = dbQuery {
+        GoalsTable.insert {
+            it[userId] = goal.userId ?: 0
+            it[goalName] = goal.goalName
+            it[startDate] = goal.startDate.toString()
+            it[endDate] = goal.endDate.toString()
+        }[GoalsTable.id]
+    }
+
+    suspend fun deleteGoal(goalId: Int): Int = dbQuery {
+        GoalsTable.deleteWhere {
+            GoalsTable.id.eq(goalId)
+        }
     }
 
     suspend fun getUser(id: Int): User? {
@@ -115,7 +133,7 @@ class UserService() {
     suspend fun getUserId(email: String): Int? {
         val user = dbQuery {
             UsersTable.selectAll()
-                .where {UsersTable.email eq email}
+                .where { UsersTable.email eq email }
                 .map { it.toUser() }
                 .singleOrNull()
         }
@@ -129,6 +147,25 @@ class UserService() {
                 it[nickname] = user.nickname
                 it[password] = user.password
                 it[age] = user.age
+            }
+        }
+    }
+
+    suspend fun addDateToGoal(goalId: Int, date: String) {
+        dbQuery {
+            GoalsTable.update({ GoalsTable.id eq goalId }) {
+                val currentDates = GoalsTable.selectAll()
+                    .where { id eq goalId }
+                    .map { it[doneDates] }
+                    .firstOrNull()
+
+                val updatedDates = if (currentDates.isNullOrEmpty()) {
+                    date
+                } else {
+                    "$currentDates, $date"
+                }
+
+                it[doneDates] = updatedDates
             }
         }
     }
@@ -179,7 +216,21 @@ class UserService() {
         return users
     }
 
-private suspend fun <T> dbQuery(block: suspend () -> T): T =
-    newSuspendedTransaction(Dispatchers.IO) { block() }
+    suspend fun getAllGoals(): List<Goal> {
+        return dbQuery {
+            GoalsTable.selectAll().map { it.toGoal() }
+        }
+    }
+
+    suspend fun getUserGoals(userId: Int): List<Goal> {
+        return dbQuery {
+            GoalsTable.selectAll()
+                .where { GoalsTable.userId eq userId }
+                .map { it.toGoal() }
+        }
+    }
+
+    private suspend fun <T> dbQuery(block: suspend () -> T): T =
+        newSuspendedTransaction(Dispatchers.IO) { block() }
 }
 

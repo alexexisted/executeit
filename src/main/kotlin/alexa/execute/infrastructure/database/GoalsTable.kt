@@ -10,8 +10,8 @@ object GoalsTable : Table("goals") {
     val startDate = varchar("start_date", 30)
     val endDate = varchar("end_date", 30)
     val streak = integer("streak").default(0)
-    val doneDates = text("done_dates") // Store serialized JSON array
-    val attachments = text("attachments").nullable() // Optional serialized JSON array
+    val doneDates = text("done_dates").nullable()
+    val attachments = text("attachments").nullable()
 
     override val primaryKey = PrimaryKey(id, name = "PK_Goal_ID")
 }
