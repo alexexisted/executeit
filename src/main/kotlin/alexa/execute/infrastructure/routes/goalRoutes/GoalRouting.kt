@@ -73,9 +73,13 @@ fun Application.goalRouting(userService: UserService) {
                     call.respond(HttpStatusCode.BadRequest, "Invalid goal ID")
                     return@post
                 }
-
-                userService.addDateToGoal(goalId, newDate)
-                call.respond(HttpStatusCode.OK, "Date added successfully")
+                val isChecked = userService.checkIfDateClosed(goalId, newDate)
+                if (!isChecked) {
+                    userService.addDateToGoal(goalId, newDate)
+                    call.respond(HttpStatusCode.OK, "Date added successfully")
+                } else {
+                    call.respond("Date is already closed!")
+                }
             }
         }
     }

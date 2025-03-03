@@ -151,6 +151,15 @@ class UserService() {
         }
     }
 
+    suspend fun checkIfDateClosed(goalId: Int, date: String): Boolean {
+        val dateInDb = dbQuery {
+            GoalsTable.selectAll()
+                .where{GoalsTable.id eq goalId}
+                .map { it.toGoal() }
+        }
+        return ( dateInDb[0].doneDates.contains(date))
+    }
+
     suspend fun addDateToGoal(goalId: Int, date: String) {
         dbQuery {
             GoalsTable.update({ GoalsTable.id eq goalId }) {
